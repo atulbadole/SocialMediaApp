@@ -57,7 +57,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/s_Email"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
@@ -77,7 +77,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextTextPassword"
+                android:id="@+id/s_Password"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
@@ -94,7 +94,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+                app:layout_constraintTop_toBottomOf="@+id/s_Email" />
 
             <Button
                 android:id="@+id/s_SignUp"
@@ -109,7 +109,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+                app:layout_constraintTop_toBottomOf="@+id/s_Password" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/SignupUsername"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
