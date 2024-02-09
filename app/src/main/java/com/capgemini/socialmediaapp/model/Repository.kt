@@ -70,7 +70,7 @@ class Repository(val ctx : Context) {
 
     fun getuserDetails(userId: Long)  = userDao.getuserDetails(userId)
 
-    fun login(userId : Long, password: String)  = userDao.login(userId, password)
+    fun login(email : String, password: String)  = userDao.login(email, password)
 
 //    ---------------------------------- User Section Ends Here ----------------------------------
 

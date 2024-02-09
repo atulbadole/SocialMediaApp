@@ -8,7 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.capgemini.socialmediaapp.R
+import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class SignUpActivity : AppCompatActivity() {
@@ -19,10 +21,12 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var Username: EditText
     lateinit var SignupPassword: EditText
 
+    lateinit var userViewModal : UserViewModal
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-
+        userViewModal = ViewModelProvider(this).get(UserViewModal::class.java)
         BackButton = findViewById(R.id.s_Backbutton)
         SignIn = findViewById(R.id.s_SignUp)
         LoginButton = findViewById(R.id.s_login)
@@ -48,6 +52,9 @@ class SignUpActivity : AppCompatActivity() {
                     Username.text.toString()
                 )
             ) {
+                userViewModal.addUser(Username.text.toString(),
+                                        SignupEmail.text.toString(),
+                                        SignupPassword.text.toString())
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
