@@ -21,10 +21,11 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
     fun addUser(name : String,
                 email : String,
                 password : String,
+                bio : String = "",
                 profileImage : ByteArray = byteArrayOf()
     ) : Boolean{
         try{
-            repo.addUser(name, email, password, profileImage)
+            repo.addUser(name, email, password,bio, profileImage)
             return true
         }catch(e: Exception){
             Log.d("UserViewModal", "Error while adding user : ${e.localizedMessage}")

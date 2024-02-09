@@ -9,5 +9,6 @@ data class User(
     var name : String,
     val emailId : String,
     var password : String,
+    var bio : String,
     var profileImage : ByteArray
 ) {}

@@ -17,7 +17,7 @@ class Repository(val ctx : Context) {
 
     val postDao = AppDatabase.getInstance(ctx).postDao()
 
-    fun getAllPosts() : LiveData<List<Post>> {
+    fun getAllPosts() : LiveData<List<Post>?> {
         return postDao.getAllPost()
     }
 
@@ -54,10 +54,11 @@ class Repository(val ctx : Context) {
     fun addUser(name : String,
                 email : String,
                 password : String,
+                bio : String = "",
                 profileImage : ByteArray = byteArrayOf()
     ){
         CoroutineScope(Dispatchers.Default).launch {
-            userDao.addUser(User(9, name, email, password, profileImage))
+            userDao.addUser(User(9, name, email, password, bio, profileImage))
         }
     }
 
