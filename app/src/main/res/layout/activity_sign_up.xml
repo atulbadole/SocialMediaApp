@@ -5,7 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_theme"
-    tools:context=".view.SignUpActivity">
+    tools:context=".view.LoginActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/s_Backbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:clickable="true"
+        app:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_arrow_back_ios_new_24"
+        app:tint="@color/app_theme" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -44,7 +57,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/s_Email"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
@@ -64,11 +77,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextTextPassword"
+                android:id="@+id/s_Password"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/edit_text_background"
                 android:drawableLeft="@drawable/baseline_lock_24"
@@ -81,22 +94,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+                app:layout_constraintTop_toBottomOf="@+id/s_Email" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/s_SignUp"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="12dp"
                 android:backgroundTint="@color/app_theme"
-                android:text="Sign In"
+                android:text="Sign Up"
                 app:cornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+                app:layout_constraintTop_toBottomOf="@+id/s_Password" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -113,19 +126,20 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:text="Already have an account?" />
-
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/s_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:text=" Log in"
+                    android:text=" Log In"
                     android:textColor="@color/app_theme"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
+
             </LinearLayout>
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/SignupUsername"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
@@ -138,6 +152,7 @@
                 android:ems="10"
                 android:hint="Username"
                 android:inputType="textPersonName"
+                android:paddingLeft="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -145,4 +160,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
