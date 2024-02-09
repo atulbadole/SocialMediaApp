@@ -52,11 +52,16 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
         }
     }
 
-    fun login(userId: Long = 0L, password: String = "") {
+    fun login(username : String, password: String) {
         if(password==""){
 
         }else{
-            repo.login(userId, password)
+            val loginTask = CoroutineScope(Dispatchers.Default).launch {
+                var data = repo.login(username, password)
+                CoroutineScope(Dispatchers.Main).launch {
+                    currentUser.value = data
+                }
+            }
         }
     }
 

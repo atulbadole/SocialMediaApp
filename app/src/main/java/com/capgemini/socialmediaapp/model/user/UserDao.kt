@@ -19,7 +19,7 @@ interface UserDao {
     @Query("select * from user where userId==:id")
     fun getuserDetails(id : Long) : LiveData<User?>
 
-    @Query("select * from user where userId=:userId and password=:password")
-    fun login(userId : Long, password : String) : User?
+    @Query("select * from user where emailId=:userEmail and password=:password")
+    fun login(userEmail : String, password : String) : User?
 
 }
