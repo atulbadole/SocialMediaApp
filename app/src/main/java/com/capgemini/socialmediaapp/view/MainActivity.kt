@@ -7,13 +7,14 @@ import com.capgemini.socialmediaapp.R
 import java.util.Timer
 import java.util.TimerTask
 
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Timer().schedule(object : TimerTask(){
             override fun run() {
-                val intent = Intent(this@MainActivity, FeedActivity::class.java)
+                val intent = Intent(this@MainActivity, CreatePostActivity::class.java)
                 startActivity(intent)
                 finish()
             }
