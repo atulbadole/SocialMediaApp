@@ -41,4 +41,8 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
             MutableLiveData<List<Post>?>(null)
         }
     }
+
+    fun getAllPosts() : LiveData<List<Post>?> {
+        return repo.getAllPosts()
+    }
 }
