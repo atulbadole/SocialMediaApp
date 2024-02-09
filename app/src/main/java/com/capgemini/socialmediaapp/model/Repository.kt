@@ -17,25 +17,21 @@ class Repository(val ctx : Context) {
 
     val postDao = AppDatabase.getInstance(ctx).postDao()
 
-    fun getAllPosts() : LiveData<List<Post>?> {
+    suspend fun getAllPosts() : LiveData<List<Post>?> {
         return postDao.getAllPost()
     }
 
-    fun addPost(userId : Long,
+    suspend fun addPost(userId : Long,
                 imageArray : ByteArray = byteArrayOf(),
                 textContent : String = ""){
-        CoroutineScope(Dispatchers.Default).launch {
-            postDao.addPost(Post(0,userId, LocalDateTime.now(), imageArray, textContent, listOf<Long>()))
-        }
+        postDao.addPost(Post(0,userId, LocalDateTime.now(), imageArray, textContent, listOf<Long>()))
     }
 
-    fun updatePost(updatedPost: Post){
-        CoroutineScope(Dispatchers.Default).launch {
-            postDao.updatePost(updatedPost)
-        }
+    suspend fun updatePost(updatedPost: Post){
+        postDao.updatePost(updatedPost)
     }
 
-    fun getPostsOfAUser(userId: Long) : LiveData<List<Post>?> {
+    suspend fun getPostsOfAUser(userId: Long) : LiveData<List<Post>?> {
         return postDao.getPostsOfAUser(userId)
     }
 
@@ -51,26 +47,22 @@ class Repository(val ctx : Context) {
 
     val userDao = AppDatabase.getInstance(ctx).userDao()
 
-    fun addUser(name : String,
+    suspend fun addUser(name : String,
                 email : String,
                 password : String,
                 bio : String = "",
-                profileImage : ByteArray = byteArrayOf()
+                profileImage : String = ""
     ){
-        CoroutineScope(Dispatchers.Default).launch {
-            userDao.addUser(User(9, name, email, password, bio, profileImage))
-        }
+        userDao.addUser(User(name, email, password, bio, profileImage))
     }
 
-    fun updateUser(updatedUser: User){
-        CoroutineScope(Dispatchers.Default).launch {
-            userDao.updateUser(updatedUser)
-        }
+    suspend fun updateUser(updatedUser: User){
+        userDao.updateUser(updatedUser)
     }
 
-    fun getuserDetails(userId: Long)  = userDao.getuserDetails(userId)
+    suspend fun getuserDetails(userId: Long)  = userDao.getuserDetails(userId)
 
-    fun login(email : String, password: String)  = userDao.login(email, password)
+    suspend fun login(email : String, password: String)  = userDao.login(email, password)
 
 //    ---------------------------------- User Section Ends Here ----------------------------------
 
@@ -85,16 +77,12 @@ class Repository(val ctx : Context) {
 
     val commentDao = AppDatabase.getInstance(ctx).commentDao()
 
-    fun addComment(message : String, postId : Long, userId: Long){
-        CoroutineScope(Dispatchers.Default).launch {
-            commentDao.addComment(Comment(0, message, postId,userId, LocalDateTime.now()))
-        }
+    suspend fun addComment(message : String, postId : Long, userId: Long){
+        commentDao.addComment(Comment(0, message, postId,userId, LocalDateTime.now()))
     }
 
-    fun updateComment(updatedComment: Comment){
-        CoroutineScope(Dispatchers.Default).launch {
-            commentDao.updateComment(updatedComment)
-        }
+    suspend fun updateComment(updatedComment: Comment){
+        commentDao.updateComment(updatedComment)
     }
 
     fun getComments(id : Long) : LiveData<List<Comment>?> {

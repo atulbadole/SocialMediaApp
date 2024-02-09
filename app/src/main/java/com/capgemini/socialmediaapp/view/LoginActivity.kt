@@ -47,6 +47,10 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this,FeedActivity::class.java)
                     startActivity(intent)
                     finish()
+                    var pref = getSharedPreferences("socialmedia", MODE_PRIVATE)
+                    var editor = pref.edit()
+                    editor.putLong("username",it.userId)
+                    editor.commit()
                     Toast.makeText(this,"Login Successful",Toast.LENGTH_LONG).show()
                 }else{
                     Toast.makeText(this, "Invalid Login Credentials", Toast.LENGTH_LONG).show()
@@ -68,7 +72,6 @@ class LoginActivity : AppCompatActivity() {
     fun isEmailvalid(email: String): Boolean{
         val atIndex = email.indexOf('@')
         val dotIndex = email.lastIndexOf(".com")
-
 
         return atIndex > 0 && dotIndex > atIndex + 1 && dotIndex < email.length -1
 

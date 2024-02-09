@@ -2,6 +2,7 @@ package com.capgemini.socialmediaapp.viewModel.user
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
@@ -13,42 +14,63 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.os.Bundle
-class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
-    val repo = Repository(ctx)
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
 
-    val currentUser = MutableLiveData<User?>(null)
+class UserViewModal(val ctx : Application, preferences: SharedPreferences) : AndroidViewModel(ctx) {
+    val repo = Repository(ctx)
+    val isAdded = MutableLiveData<Boolean>(false)
+    val isUpdated = MutableLiveData<Boolean>(false)
+    val userData = MutableLiveData<User?>()
+    val currentUser = MutableLiveData<User?>()
+    init {
+        // sharedPref
+       // ctx.getSharedPreferences()
+        val userId = preferences.getLong("userId", -1L)
+        if(userId!=-1L){
+            viewModelScope.launch(Dispatchers.Default) {
+                currentUser.postValue(repo.getuserDetails(userId).value)
+            }
+        }
+    }
 
     fun addUser(name : String,
                 email : String,
                 password : String,
                 bio : String = "",
                 profileImage : ByteArray = byteArrayOf()
-    ) : Boolean{
-        try{
-            repo.addUser(name, email, password,bio, profileImage)
-            return true
-        }catch(e: Exception){
-            Log.d("UserViewModal", "Error while adding user : ${e.localizedMessage}")
-            return false
+    ) {
+        viewModelScope.launch {
+            try{
+                repo.addUser(name, email, password,bio, profileImage)
+                isAdded.postValue(true)
+            }catch(e: Exception){
+                Log.d("UserViewModal", "Error while adding user : ${e.localizedMessage}")
+                isAdded.postValue(false)
+            }
         }
     }
 
-    fun updateUser(updatedUser: User) : Boolean{
-        try{
-            repo.updateUser(updatedUser)
-            return true
-        }catch(e: Exception){
-            Log.d("UserViewModal", "Error while updating user having userId : ${updatedUser.userId}, error message : ${e.localizedMessage}")
-            return false
+    fun updateUser(updatedUser: User) {
+        viewModelScope.launch{
+            try{
+                repo.updateUser(updatedUser)
+                isUpdated.postValue(true)
+            }catch(e: Exception){
+                Log.d("UserViewModal", "Error while updating user having userId : ${updatedUser.userId}, error message : ${e.localizedMessage}")
+                isUpdated.postValue(false)
+            }
         }
     }
 
-    fun getuserDetails(userId: Long) : LiveData<User?> {
-        try{
-            return repo.getuserDetails(userId)
-        }catch(e: Exception){
-            Log.d("UserVewModal", "Error while getting user details for userId : ${userId}, error message : ${e.localizedMessage}")
-            return MutableLiveData<User?>(null)
+    fun getuserDetails(userId: Long) {
+        val data = viewModelScope.async {
+             try{
+                userData.postValue(repo.getuserDetails(userId).value)
+            }catch(e: Exception){
+                Log.d("UserVewModal", "Error while getting user details for userId : ${userId}, error message : ${e.localizedMessage}")
+                 userData.postValue(null)
+            }
         }
     }
 
@@ -59,7 +81,8 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
             val loginTask = CoroutineScope(Dispatchers.Default).launch {
                 var data = repo.login(username, password)
                 CoroutineScope(Dispatchers.Main).launch {
-                    currentUser.value = data
+                    currentUser.postValue(data)
+                    Log.d("loginModal","${data}")
                 }
             }
         }

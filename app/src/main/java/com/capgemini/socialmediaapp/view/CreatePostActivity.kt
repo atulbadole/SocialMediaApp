@@ -5,12 +5,18 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.capgemini.socialmediaapp.R
+import com.capgemini.socialmediaapp.model.user.User
 import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class CreatePostActivity : AppCompatActivity() {
@@ -20,6 +26,7 @@ class CreatePostActivity : AppCompatActivity() {
     private lateinit var postimage: ImageView
     lateinit var username : TextView
     lateinit var userViewModal : UserViewModal
+    lateinit var curUser : MutableLiveData<User?>
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -31,10 +38,23 @@ class CreatePostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_post)
         userViewModal = ViewModelProvider(this).get(UserViewModal::class.java)
+        curUser = userViewModal.currentUser
         imageView = findViewById(R.id.c_selectImageView)
         postimage = findViewById(R.id.c_post_imageview)
         username = findViewById(R.id.c_post_username)
-        username.text = userViewModal.currentUser.value!!.name
+        curUser.observe(this){
+            username.text = it?.name
+            Log.d("createActivity", "from observe ${it?.name}")
+        }
+        var pref = getSharedPreferences("socialmedia", MODE_PRIVATE)
+        var userId = pref.getLong("username",0L)
+        CoroutineScope(Dispatchers.Default).launch {
+            var userData = userViewModal.getuserDetails(userId)
+            CoroutineScope(Dispatchers.Main).launch {
+                curUser.postValue(userData.value)
+            }
+        }
+        Log.d("createActivity", "${curUser.value}")
         imageView.setOnClickListener {
             openGallery()
         }

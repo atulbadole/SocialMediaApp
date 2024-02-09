@@ -2,27 +2,29 @@ package com.capgemini.socialmediaapp.viewModel.post
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import com.capgemini.socialmediaapp.model.Repository
 import com.capgemini.socialmediaapp.model.post.Post
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class PostViewModal(application: Application) : AndroidViewModel(application) {
+
     val repo = Repository(application)
+    val isAdded = MutableLiveData<Boolean>(false)
+    val isUpdated = MutableLiveData<Boolean>(false)
+    val allPosts = MutableLiveData<List<Post>?>()
 
     fun addPost(userId : Long,
                 imageArray : ByteArray = byteArrayOf(),
-                textContent : String = "") : Boolean {
-            return try{
+                textContent : String = "") {
+        viewModelScope.launch {
+            try{
                 repo.addPost(userId, imageArray, textContent)
-                true
             }catch (e: Exception){
                 Log.d("PostViewModal", "Error while adding post : ${e.localizedMessage}")
-                false
             }
+        }
     }
 
     fun updatePost(updatedPost: Post) : Boolean{
