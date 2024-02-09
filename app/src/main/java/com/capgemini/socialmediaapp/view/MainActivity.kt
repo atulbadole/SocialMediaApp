@@ -7,6 +7,7 @@ import com.capgemini.socialmediaapp.R
 import java.util.Timer
 import java.util.TimerTask
 
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
