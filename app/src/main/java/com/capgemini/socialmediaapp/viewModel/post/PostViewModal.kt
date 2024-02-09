@@ -5,8 +5,10 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.capgemini.socialmediaapp.model.Repository
 import com.capgemini.socialmediaapp.model.post.Post
+import java.time.LocalDateTime
 
 class PostViewModal(application: Application) : AndroidViewModel(application) {
     val repo = Repository(application)
@@ -43,6 +45,10 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     }
 
     fun getAllPosts() : LiveData<List<Post>?> {
-        return repo.getAllPosts()
+        val posts = repo.getAllPosts()
+        posts.value?.sortedByDescending {
+            it.timestamp
+        }
+        return posts
     }
 }
