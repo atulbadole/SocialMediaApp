@@ -17,6 +17,9 @@
             android:exported="false"
             android:label="@string/title_activity_sign_up" />
         <activity
+            android:name=".view.CreatePostActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.LoginActivity"
             android:exported="false" />
         <activity
