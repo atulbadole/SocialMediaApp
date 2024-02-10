@@ -129,7 +129,7 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginVertical="5dp"
             android:backgroundTint="#D70070"
-            android:onClick="post"
+            android:onClick="createPost"
             android:paddingHorizontal="25dp"
             android:text="POST"
             android:textSize="14sp"

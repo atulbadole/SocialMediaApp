@@ -23,16 +23,17 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
     val repo = Repository(ctx)
     val isAdded = MutableLiveData<Boolean>(false)
     val isUpdated = MutableLiveData<Boolean>(false)
-    val userData = MutableLiveData<User?>()
-    val currentUser = MutableLiveData<User?>()
+    val userData = MutableLiveData<User?>(null)
+    val currentUser = MutableLiveData<User?>(null)
+    val allUsers = repo.getAllUsers()
     fun fetchCurrentUserDetails(con : Context) {
-        val pref = con.applicationContext.getSharedPreferences("socialMedia", MODE_PRIVATE)
-        Log.d("userViewModal", "${pref.all}")
-        val userId = pref.getLong("userId", -1L)
-        Log.d("userViewModal", "${userId}")
+        val pref = con.applicationContext.getSharedPreferences("final", MODE_PRIVATE)
+        Log.d("userviewmodal", "${pref.all}")
+        val userId = pref.getLong("loggedInUserID", -1L)
+        Log.d("userviewmodal", "${userId}")
         if(userId!=-1L){
             viewModelScope.launch(Dispatchers.Default) {
-                currentUser.postValue(repo.getuserDetails(userId).value)
+                currentUser.postValue(repo.getuserDetails(userId))
             }
         }
     }
@@ -68,7 +69,7 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
     fun getuserDetails(userId: Long) {
         val data = viewModelScope.async {
              try{
-                userData.postValue(repo.getuserDetails(userId).value)
+                userData.postValue(repo.getuserDetails(userId))
             }catch(e: Exception){
                 Log.d("UserVewModal", "Error while getting user details for userId : ${userId}, error message : ${e.localizedMessage}")
                  userData.postValue(null)

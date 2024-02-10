@@ -18,9 +18,9 @@ interface PostDao {
     suspend fun updatePost(updatedPost : Post)
 
     @Query("select * from post")
-    fun getAllPost() : LiveData<List<Post>?>
+    fun getAllPost() : LiveData<List<Post>>
 
     @Query("select * from post, user where user.userId==post.userId and post.userId==:id")
-    fun getPostsOfAUser(id : Long) : LiveData<List<Post>?>
+    fun getPostsOfAUser(id : Long) : List<Post>
 
 }

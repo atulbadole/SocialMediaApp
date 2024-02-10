@@ -17,21 +17,21 @@ class Repository(val ctx : Context) {
 
     val postDao = AppDatabase.getInstance(ctx).postDao()
 
-    suspend fun getAllPosts() : LiveData<List<Post>?> {
+    fun getAllPosts() : LiveData<List<Post>> {
         return postDao.getAllPost()
     }
 
     suspend fun addPost(userId : Long,
                 imageArray : String,
                 textContent : String = ""){
-        postDao.addPost(Post(0,userId, LocalDateTime.now(), imageArray, textContent, listOf<Long>()))
+        postDao.addPost(Post(userId, LocalDateTime.now(), imageArray, textContent, listOf<Long>()))
     }
 
     suspend fun updatePost(updatedPost: Post){
         postDao.updatePost(updatedPost)
     }
 
-    suspend fun getPostsOfAUser(userId: Long) : LiveData<List<Post>?> {
+    suspend fun getPostsOfAUser(userId: Long) : List<Post>? {
         return postDao.getPostsOfAUser(userId)
     }
 
@@ -63,6 +63,8 @@ class Repository(val ctx : Context) {
     suspend fun getuserDetails(userId: Long)  = userDao.getuserDetails(userId)
 
     suspend fun login(email : String, password: String)  = userDao.login(email, password)
+
+    fun getAllUsers() = userDao.getAllUsers()
 
 //    ---------------------------------- User Section Ends Here ----------------------------------
 

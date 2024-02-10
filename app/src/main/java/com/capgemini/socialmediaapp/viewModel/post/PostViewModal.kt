@@ -13,7 +13,7 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     val repo = Repository(application)
     val isAdded = MutableLiveData<Boolean>(false)
     val isUpdated = MutableLiveData<Boolean>(false)
-    val allPosts = MutableLiveData<List<Post>?>()
+    val allPosts = repo.getAllPosts()
     val postsOfAUser = MutableLiveData<List<Post>?>()
 
     fun addPost(userId : Long,
@@ -45,7 +45,7 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     fun getPostsOfAUser(userId: Long){
         viewModelScope.launch {
             try{
-                postsOfAUser.postValue(repo.getPostsOfAUser(userId).value)
+                postsOfAUser.postValue(repo.getPostsOfAUser(userId))
             }catch (e: Exception){
                 Log.d("PostViewModal", "Error while getting posts for userId : ${userId}")
                 postsOfAUser.postValue(MutableLiveData<List<Post>?>(null).value)
@@ -53,13 +53,4 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getAllPosts() {
-        viewModelScope.launch {
-            val posts = repo.getAllPosts().value
-            posts?.sortedByDescending {
-                it.timestamp
-            }
-            allPosts.postValue(posts)
-        }
-    }
 }

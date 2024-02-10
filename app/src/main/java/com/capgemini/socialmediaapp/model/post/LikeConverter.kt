@@ -4,8 +4,8 @@ import androidx.room.TypeConverter
 
 class LikeConverter {
     @TypeConverter
-    fun fromString(s : String) = s.split(",").map { it.toLong() }
+    fun fromString(s : String) = if(s.length>0) s.split(",").map { it.toLong() } else listOf()
 
     @TypeConverter
-    fun toString(likeList : List<Long>) = likeList.joinToString { "," }
+    fun toString(likeList : List<Long>) = if(likeList.size>0)likeList.joinToString(",") else ""
 }

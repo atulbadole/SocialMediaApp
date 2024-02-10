@@ -17,9 +17,12 @@ interface UserDao {
     suspend fun updateUser(updatedUser : User)
 
     @Query("select * from user where userId==:id")
-    fun getuserDetails(id : Long) : LiveData<User?>
+    fun getuserDetails(id : Long) : User?
 
     @Query("select * from user where emailId=:userEmail and password=:password")
     fun login(userEmail : String, password : String) : User?
+
+    @Query("select * from user")
+    fun getAllUsers() : LiveData<List<User>>
 
 }

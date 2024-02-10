@@ -16,10 +16,10 @@ import java.util.Date
     )
 ])
 data class Post (
-    @PrimaryKey(autoGenerate = true) val postId : Long,
     val userId : Long,
     var timestamp : LocalDateTime,
     var imageArray : String,
     var textContent : String,
-    var likes : List<Long>
+    var likes : List<Long>,
+    @PrimaryKey(autoGenerate = true) val postId : Long = 0L
 )
