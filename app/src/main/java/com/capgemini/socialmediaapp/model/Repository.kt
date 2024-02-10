@@ -22,7 +22,7 @@ class Repository(val ctx : Context) {
     }
 
     suspend fun addPost(userId : Long,
-                imageArray : ByteArray = byteArrayOf(),
+                imageArray : String,
                 textContent : String = ""){
         postDao.addPost(Post(0,userId, LocalDateTime.now(), imageArray, textContent, listOf<Long>()))
     }

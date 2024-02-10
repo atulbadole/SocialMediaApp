@@ -29,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun createNewInstance(context: Context): AppDatabase {
-            this.instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "socialMediaApp.db").build()
+            this.instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "test.db").build()
             return this.instance as AppDatabase
         }
     }

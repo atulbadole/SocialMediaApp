@@ -1,10 +1,12 @@
 package com.capgemini.socialmediaapp.view
 
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -15,6 +17,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.capgemini.socialmediaapp.R
 import com.capgemini.socialmediaapp.model.user.User
 import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     lateinit var  SignUpButton : TextView
@@ -44,13 +49,17 @@ class LoginActivity : AppCompatActivity() {
             if(loginBtnClicked){
                 loginBtnClicked = false
                 if(it!=null){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        it?.let{
+                            var pref = this@LoginActivity.getSharedPreferences("final", MODE_PRIVATE)
+                            var editor = pref.edit()
+                            editor.putLong("loggedInUserID",it.userId.toLong())
+                            editor.apply()
+                        }
+                    }
                     val intent = Intent(this,FeedActivity::class.java)
                     startActivity(intent)
                     finish()
-                    var pref = getSharedPreferences("socialmedia", MODE_PRIVATE)
-                    var editor = pref.edit()
-                    editor.putLong("username",it.userId)
-                    editor.commit()
                     Toast.makeText(this,"Login Successful",Toast.LENGTH_LONG).show()
                 }else{
                     Toast.makeText(this, "Invalid Login Credentials", Toast.LENGTH_LONG).show()
@@ -59,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
         }
         SignInButton.setOnClickListener{
             if(validateDetails(LoginEmail.text.toString(), LoginPassword.text.toString())){
-                userViewModal.login(LoginEmail.text.toString(),LoginPassword.text.toString())
+                userViewModal.login(LoginEmail.text.toString(),LoginPassword.text.toString(), this)
                 loginBtnClicked = true
             }else{
                 Toast.makeText(this, "Invalid Login Credentials", Toast.LENGTH_LONG).show()

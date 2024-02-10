@@ -14,43 +14,52 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     val isAdded = MutableLiveData<Boolean>(false)
     val isUpdated = MutableLiveData<Boolean>(false)
     val allPosts = MutableLiveData<List<Post>?>()
+    val postsOfAUser = MutableLiveData<List<Post>?>()
 
     fun addPost(userId : Long,
-                imageArray : ByteArray = byteArrayOf(),
+                imageArray : String,
                 textContent : String = "") {
         viewModelScope.launch {
             try{
                 repo.addPost(userId, imageArray, textContent)
+                isAdded.postValue(true)
             }catch (e: Exception){
                 Log.d("PostViewModal", "Error while adding post : ${e.localizedMessage}")
+                isAdded.postValue(false)
             }
         }
     }
 
-    fun updatePost(updatedPost: Post) : Boolean{
-        return try{
-            repo.updatePost(updatedPost)
-            true
-        }catch (e: Exception){
-            Log.d("PostViewModal", "Error while updating post of postId : ${updatedPost.postId}")
-            false
+    fun updatePost(updatedPost: Post) {
+        viewModelScope.launch {
+            try{
+                repo.updatePost(updatedPost)
+                isUpdated.postValue(true)
+            }catch (e: Exception){
+                Log.d("PostViewModal", "Error while updating post of postId : ${updatedPost.postId}")
+                isUpdated.postValue(false)
+            }
         }
     }
 
-    fun getPostsOfAUser(userId: Long) : LiveData<List<Post>?> {
-        return try{
-            repo.getPostsOfAUser(userId)
-        }catch (e: Exception){
-            Log.d("PostViewModal", "Error while getting posts for userId : ${userId}")
-            MutableLiveData<List<Post>?>(null)
+    fun getPostsOfAUser(userId: Long){
+        viewModelScope.launch {
+            try{
+                postsOfAUser.postValue(repo.getPostsOfAUser(userId).value)
+            }catch (e: Exception){
+                Log.d("PostViewModal", "Error while getting posts for userId : ${userId}")
+                postsOfAUser.postValue(MutableLiveData<List<Post>?>(null).value)
+            }
         }
     }
 
-    fun getAllPosts() : LiveData<List<Post>?> {
-        val posts = repo.getAllPosts()
-        posts.value?.sortedByDescending {
-            it.timestamp
+    fun getAllPosts() {
+        viewModelScope.launch {
+            val posts = repo.getAllPosts().value
+            posts?.sortedByDescending {
+                it.timestamp
+            }
+            allPosts.postValue(posts)
         }
-        return posts
     }
 }

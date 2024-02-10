@@ -1,11 +1,13 @@
 
 package com.capgemini.socialmediaapp.view
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +28,7 @@ class CreatePostActivity : AppCompatActivity() {
     private lateinit var postimage: ImageView
     lateinit var username : TextView
     lateinit var userViewModal : UserViewModal
+    lateinit var postTextContent : EditText
     lateinit var curUser : MutableLiveData<User?>
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -37,27 +40,24 @@ class CreatePostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_post)
-        userViewModal = ViewModelProvider(this).get(UserViewModal::class.java)
-        curUser = userViewModal.currentUser
         imageView = findViewById(R.id.c_selectImageView)
         postimage = findViewById(R.id.c_post_imageview)
         username = findViewById(R.id.c_post_username)
-        curUser.observe(this){
-            username.text = it?.name
-            Log.d("createActivity", "from observe ${it?.name}")
-        }
-        var pref = getSharedPreferences("socialmedia", MODE_PRIVATE)
-        var userId = pref.getLong("username",0L)
-        CoroutineScope(Dispatchers.Default).launch {
-            var userData = userViewModal.getuserDetails(userId)
-            CoroutineScope(Dispatchers.Main).launch {
-                curUser.postValue(userData.value)
-            }
-        }
-        Log.d("createActivity", "${curUser.value}")
+        postTextContent = findViewById(R.id.c_post_text_content)
+        userViewModal = ViewModelProvider(this).get(UserViewModal::class.java)
         imageView.setOnClickListener {
             openGallery()
         }
+        userViewModal.userData.observe(this){
+//            Log.d("from_post_creation", "from post creation : ${it}")
+            username.text = it?.name
+            postTextContent.setText(it.toString())
+//            Log.d("postcreation", "from observe ${it?.name}")
+        }
+        val pref = this.getSharedPreferences("test", MODE_PRIVATE)
+        val  tempuserId = pref.getLong("loggedInUserID", -1L)
+        Log.d("POSTCREATION", "${tempuserId}")
+        if(tempuserId!=-1L ) userViewModal.getuserDetails(tempuserId!!)
     }
     private fun openGallery(){
         val intent = Intent()

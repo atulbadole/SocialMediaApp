@@ -19,7 +19,7 @@ data class Post (
     @PrimaryKey(autoGenerate = true) val postId : Long,
     val userId : Long,
     var timestamp : LocalDateTime,
-    var imageArray : ByteArray,
+    var imageArray : String,
     var textContent : String,
     var likes : List<Long>
 )

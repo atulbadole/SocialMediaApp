@@ -2,6 +2,7 @@ package com.capgemini.socialmediaapp.viewModel.user
 
 import android.app.Application
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -14,19 +15,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.os.Bundle
+import android.view.Display.Mode
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 
-class UserViewModal(val ctx : Application, preferences: SharedPreferences) : AndroidViewModel(ctx) {
+class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
     val repo = Repository(ctx)
     val isAdded = MutableLiveData<Boolean>(false)
     val isUpdated = MutableLiveData<Boolean>(false)
     val userData = MutableLiveData<User?>()
     val currentUser = MutableLiveData<User?>()
-    init {
-        // sharedPref
-       // ctx.getSharedPreferences()
-        val userId = preferences.getLong("userId", -1L)
+    fun fetchCurrentUserDetails(con : Context) {
+        val pref = con.applicationContext.getSharedPreferences("socialMedia", MODE_PRIVATE)
+        Log.d("userViewModal", "${pref.all}")
+        val userId = pref.getLong("userId", -1L)
+        Log.d("userViewModal", "${userId}")
         if(userId!=-1L){
             viewModelScope.launch(Dispatchers.Default) {
                 currentUser.postValue(repo.getuserDetails(userId).value)
@@ -37,12 +40,11 @@ class UserViewModal(val ctx : Application, preferences: SharedPreferences) : And
     fun addUser(name : String,
                 email : String,
                 password : String,
-                bio : String = "",
-                profileImage : ByteArray = byteArrayOf()
+                bio : String = ""
     ) {
         viewModelScope.launch {
             try{
-                repo.addUser(name, email, password,bio, profileImage)
+                repo.addUser(name, email, password,bio)
                 isAdded.postValue(true)
             }catch(e: Exception){
                 Log.d("UserViewModal", "Error while adding user : ${e.localizedMessage}")
@@ -74,7 +76,7 @@ class UserViewModal(val ctx : Application, preferences: SharedPreferences) : And
         }
     }
 
-    fun login(username : String, password: String) {
+    fun login(username : String, password: String, ctx: Context) {
         if(password==""){
 
         }else{
@@ -82,6 +84,12 @@ class UserViewModal(val ctx : Application, preferences: SharedPreferences) : And
                 var data = repo.login(username, password)
                 CoroutineScope(Dispatchers.Main).launch {
                     currentUser.postValue(data)
+//                    data?.let{
+//                        var pref = ctx.getSharedPreferences("socialmedia", MODE_PRIVATE)
+//                        var editor = pref.edit()
+//                        editor.putLong("userId",it.userId)
+//                        editor.commit()
+//                    }
                     Log.d("loginModal","${data}")
                 }
             }
