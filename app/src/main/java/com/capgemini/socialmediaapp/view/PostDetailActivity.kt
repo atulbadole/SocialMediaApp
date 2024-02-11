@@ -65,10 +65,6 @@ class PostDetailActivity : AppCompatActivity() {
         imageEditingOptionsContainer = findViewById(R.id.image_editing_options)
         addImageButton = findViewById(R.id.post_detail_add_image)
         clearImageButton = findViewById(R.id.post_detail_clear_image)
-        userProfileImage.setOnClickListener {
-            val i = Intent(this, ProfilePageActivity::class.java)
-            startActivity(i)
-        }
 
         addImageButton.setOnClickListener {
             openGallery()
@@ -131,6 +127,12 @@ class PostDetailActivity : AppCompatActivity() {
                                 postLikeBtnImage.setImageResource(R.drawable.white_heart)
                             }
                         }
+                        userProfileImage.setOnClickListener {
+                            val i = Intent(this, ProfilePageActivity::class.java)
+                            i.putExtra("userId", post.userId)
+                            i.putExtra("currentUserId", currentUserId)
+                            startActivity(i)
+                        }
                     }
                 }
             }
@@ -149,21 +151,11 @@ class PostDetailActivity : AppCompatActivity() {
             result.data?.data?.let{
                 val imageUri = it
                 postImage.setImageURI(imageUri)
-                updatedPost!!.imageArray = getImagePath(imageUri)
+                updatedPost!!.imageArray = getImagePath(imageUri, contentResolver)
             }
         }
     }
 
-    private fun getImagePath(imageUri: Uri): String {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(imageUri, projection, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            it.moveToFirst()
-            return it.getString(columnIndex)
-        }
-        return ""
-    }
 
     fun toggleEditable(editable: Boolean){
         Log.d("fromdetailactivty", "toggelEditable : ${editable}")
