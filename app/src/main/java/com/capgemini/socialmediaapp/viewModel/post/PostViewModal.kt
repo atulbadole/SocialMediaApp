@@ -16,7 +16,7 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     val isAdded = MutableLiveData<Boolean>(false)
     val isUpdated = MutableLiveData<Boolean>(false)
     val allPosts = repo.getAllPosts()
-    val postsOfAUser = MutableLiveData<List<Post>?>()
+    val postsOfAUser = MutableLiveData<List<Post>>(listOf())
     val postData = MutableLiveData<Post?>(null)
 
     fun addPost(userId : Long,
@@ -46,7 +46,7 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     }
 
     fun getPostsOfAUser(userId: Long){
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.Default).launch {
             try{
                 postsOfAUser.postValue(repo.getPostsOfAUser(userId))
             }catch (e: Exception){

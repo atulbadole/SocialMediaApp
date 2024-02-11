@@ -19,6 +19,9 @@
             android:name=".view.CommentActivity"
             android:exported="false" />
         <activity
+            android:name=".view.ProfilePageActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_up" />

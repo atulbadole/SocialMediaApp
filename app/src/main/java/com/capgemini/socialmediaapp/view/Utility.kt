@@ -1,7 +1,10 @@
 package com.capgemini.socialmediaapp.view
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -33,3 +36,14 @@ fun getTimePassedString(dateTime: LocalDateTime) : String {
 //        }
 //    }
 //}
+
+fun getImagePath(imageUri: Uri, contentResolver : ContentResolver): String {
+    val projection = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor = contentResolver.query(imageUri, projection, null, null)
+    cursor?.use {
+        val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        it.moveToFirst()
+        return it.getString(columnIndex)
+    }
+    return ""
+}

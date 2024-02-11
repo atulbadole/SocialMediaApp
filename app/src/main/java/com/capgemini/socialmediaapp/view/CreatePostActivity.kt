@@ -36,22 +36,12 @@ class CreatePostActivity : AppCompatActivity() {
             result.data?.data?.let{
                 val imageUri = it
                 postimage.setImageURI(imageUri)
-                postImagePath = getImagePath(imageUri)
+                postImagePath = getImagePath(imageUri, contentResolver)
                 Log.d("localimagepath", "${postImagePath}")
             }
         }
     }
 
-    private fun getImagePath(imageUri: Uri): String {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(imageUri, projection, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            it.moveToFirst()
-            return it.getString(columnIndex)
-        }
-        return ""
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -65,18 +65,22 @@ class FeedViewAdapter(val feedList : List<Post>,
             holder.likeImageView.setImageResource(R.drawable.white_heart)
         }
         holder.likeBtn.setOnClickListener {
-            var updatedFeed = feed
-            var list = feed.likes.toMutableList()
-            if(feed.likes.contains(currentUserId)){
-                list.remove(currentUserId)
-                updatedFeed.likes = list
-                holder.likeImageView.setImageResource(R.drawable.white_heart)
+            if(user.userId!=currentUserId){
+                var updatedFeed = feed
+                var list = feed.likes.toMutableList()
+                if(feed.likes.contains(currentUserId)){
+                    list.remove(currentUserId)
+                    updatedFeed.likes = list
+                    holder.likeImageView.setImageResource(R.drawable.white_heart)
+                }else{
+                    list.add(currentUserId)
+                    updatedFeed.likes = list
+                    holder.likeImageView.setImageResource(R.drawable.red_heart)
+                }
+                updateFeed(updatedFeed)
             }else{
-                list.add(currentUserId)
-                updatedFeed.likes = list
-                holder.likeImageView.setImageResource(R.drawable.red_heart)
+                showMessage(ctx, "Cannot like your own post.")
             }
-            updateFeed(updatedFeed)
         }
         if(user.profileImage.length>0){
             Glide.with(ctx).load(user.profileImage).into(holder.userProfileImage)
