@@ -22,18 +22,19 @@ class MainActivity : AppCompatActivity() {
         userViewModal = ViewModelProvider(this).get(UserViewModal::class.java)
         Timer().schedule(object : TimerTask(){
             override fun run() {
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    userViewModal.currentUser.observe(this@MainActivity){
-//                        if(it==null){
+                CoroutineScope(Dispatchers.Main).launch {
+                    userViewModal.fetchCurrentUserDetails(this@MainActivity)
+                    userViewModal.currentUser.observe(this@MainActivity){
+                        if(it==null){
                             val intent = Intent(this@MainActivity, LoginActivity::class.java)
                             startActivity(intent)
-//                        }else{
-//                            val intent = Intent(this@MainActivity, FeedActivity::class.java)
-//                            startActivity(intent)
-//                        }
+                        }else{
+                            val intent = Intent(this@MainActivity, FeedActivity::class.java)
+                            startActivity(intent)
+                        }
                         finish()
-//                    }
-//                }
+                    }
+                }
             }
         }, 2000)
     }

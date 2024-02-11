@@ -9,14 +9,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.capgemini.socialmediaapp.R
 import com.capgemini.socialmediaapp.model.post.Post
 import com.capgemini.socialmediaapp.model.user.User
-import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -24,7 +23,8 @@ class FeedViewAdapter(val feedList : List<Post>,
                       val userDetailsMap : Map<Long, User>,
                       val ctx : Context,
                       val currentUserId : Long,
-                      val updateFeed : (Post)->Unit
+                      val updateFeed : (Post)->Unit,
+                      val openPostDetails : (Post, Boolean)->Unit
                     ) : RecyclerView.Adapter<FeedViewAdapter.FeedHolder>() {
 
     inner class FeedHolder(view : View) : ViewHolder(view){
@@ -33,9 +33,11 @@ class FeedViewAdapter(val feedList : List<Post>,
         val textContent : TextView = view.findViewById(R.id.post_content)
         val image : ImageView = view.findViewById(R.id.post_content_image)
         val postTime : TextView = view.findViewById(R.id.feed_time)
-        val feedEditBtn : CardView = view.findViewById(R.id.feed_edit_btn)
         val likeBtn : LinearLayout = view.findViewById(R.id.feed_like_btn)
         val likeImageView : ImageView = view.findViewById(R.id.feed_like_image)
+        val feedEditBtn : CardView = view.findViewById(R.id.feed_edit_btn)
+        val viewRoot = view
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedHolder {
@@ -68,23 +70,28 @@ class FeedViewAdapter(val feedList : List<Post>,
             if(feed.likes.contains(currentUserId)){
                 list.remove(currentUserId)
                 updatedFeed.likes = list
+                holder.likeImageView.setImageResource(R.drawable.white_heart)
             }else{
                 list.add(currentUserId)
                 updatedFeed.likes = list
+                holder.likeImageView.setImageResource(R.drawable.red_heart)
             }
             updateFeed(updatedFeed)
         }
-    }
-
-    fun getTimePassedString(dateTime: LocalDateTime) : String {
-        val currentTime = LocalDateTime.now()
-        val dura = Duration.between(dateTime, currentTime)
-
-        return when {
-            dura.toDays()>0 -> "${dura.toDays()} days ago"
-            dura.toHours()>0 -> "${dura.toHours()} hours ago"
-            dura.toMinutes()>0 -> "${dura.toMinutes()} minutes ago"
-             else -> "Just now"
+        if(user.profileImage.length>0){
+            Glide.with(ctx).load(user.profileImage).into(holder.userProfileImage)
+        }
+        if(feed.userId!=currentUserId){
+            holder.feedEditBtn.isClickable = false
+            holder.feedEditBtn.isVisible = false
+        }else{
+            holder.feedEditBtn.setOnClickListener {
+                openPostDetails(feed, true)
+            }
+        }
+        holder.viewRoot.setOnClickListener {
+            openPostDetails(feed, false)
         }
     }
+
 }

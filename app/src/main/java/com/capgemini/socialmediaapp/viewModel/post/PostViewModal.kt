@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.capgemini.socialmediaapp.model.Repository
 import com.capgemini.socialmediaapp.model.post.Post
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -15,6 +17,7 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     val isUpdated = MutableLiveData<Boolean>(false)
     val allPosts = repo.getAllPosts()
     val postsOfAUser = MutableLiveData<List<Post>?>()
+    val postData = MutableLiveData<Post?>(null)
 
     fun addPost(userId : Long,
                 imageArray : String,
@@ -48,7 +51,23 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
                 postsOfAUser.postValue(repo.getPostsOfAUser(userId))
             }catch (e: Exception){
                 Log.d("PostViewModal", "Error while getting posts for userId : ${userId}")
-                postsOfAUser.postValue(MutableLiveData<List<Post>?>(null).value)
+                postsOfAUser.postValue(null)
+            }
+        }
+    }
+
+    fun getPost(postId : Long){
+//        viewModelScope.launch {
+//
+//        }
+        CoroutineScope(Dispatchers.Default).launch {
+            try{
+                val data = repo.getPost(postId)
+                Log.d("fromviewmodal", "data fetched : ${data}")
+                postData.postValue(data as Post?)
+            }catch(e : Exception){
+                Log.d("PostViewModal", "Error while getting post for postId : ${postId}, ${e.localizedMessage}")
+                postData.postValue(null)
             }
         }
     }

@@ -1,7 +1,6 @@
 
 package com.capgemini.socialmediaapp.view
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +10,10 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.capgemini.socialmediaapp.R
-import com.capgemini.socialmediaapp.model.user.User
 import com.capgemini.socialmediaapp.viewModel.post.PostViewModal
 import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class CreatePostActivity : AppCompatActivity() {

@@ -31,9 +31,11 @@ class Repository(val ctx : Context) {
         postDao.updatePost(updatedPost)
     }
 
-    suspend fun getPostsOfAUser(userId: Long) : List<Post>? {
+    fun getPostsOfAUser(userId: Long) : List<Post>? {
         return postDao.getPostsOfAUser(userId)
     }
+
+    fun getPost(id : Long) = postDao.getPost(id)
 
 //    ----------------------------------- Post Section Ends here ---------------------------------
 

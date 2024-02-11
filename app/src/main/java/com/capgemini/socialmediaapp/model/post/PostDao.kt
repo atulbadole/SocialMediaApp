@@ -23,4 +23,7 @@ interface PostDao {
     @Query("select * from post, user where user.userId==post.userId and post.userId==:id")
     fun getPostsOfAUser(id : Long) : List<Post>
 
+    @Query("select * from post where post.postId==:id")
+    fun getPost(id : Long) : Post
+
 }

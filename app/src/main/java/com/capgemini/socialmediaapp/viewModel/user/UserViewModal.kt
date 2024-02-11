@@ -67,7 +67,7 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
     }
 
     fun getuserDetails(userId: Long) {
-        val data = viewModelScope.async {
+         viewModelScope.launch {
              try{
                 userData.postValue(repo.getuserDetails(userId))
             }catch(e: Exception){
