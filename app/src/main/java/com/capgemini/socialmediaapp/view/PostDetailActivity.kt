@@ -65,6 +65,10 @@ class PostDetailActivity : AppCompatActivity() {
         imageEditingOptionsContainer = findViewById(R.id.image_editing_options)
         addImageButton = findViewById(R.id.post_detail_add_image)
         clearImageButton = findViewById(R.id.post_detail_clear_image)
+        userProfileImage.setOnClickListener {
+            val i = Intent(this, ProfilePageActivity::class.java)
+            startActivity(i)
+        }
 
         addImageButton.setOnClickListener {
             openGallery()
