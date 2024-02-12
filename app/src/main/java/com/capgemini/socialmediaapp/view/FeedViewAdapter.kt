@@ -1,6 +1,7 @@
 package com.capgemini.socialmediaapp.view
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -21,10 +24,11 @@ import java.time.LocalDateTime
 
 class FeedViewAdapter(val feedList : List<Post>,
                       val userDetailsMap : Map<Long, User>,
-                      //val ctx : Context,
                       val currentUserId : Long,
                       val updateFeed : (Post)->Unit,
-                      val openPostDetails : (Post, Boolean)->Unit
+                      val openPostDetails : (Post, Boolean)->Unit,
+                      val openCommentPage : (Long)-> Unit,
+                      val openProfilePage : (Long)->Unit
                     ) : RecyclerView.Adapter<FeedViewAdapter.FeedHolder>() {
 
     inner class FeedHolder(view : View) : ViewHolder(view){
@@ -37,7 +41,7 @@ class FeedViewAdapter(val feedList : List<Post>,
         val likeImageView : ImageView = view.findViewById(R.id.feed_like_image)
         val feedEditBtn : CardView = view.findViewById(R.id.feed_edit_btn)
         val viewRoot = view
-
+        val commentBtn : LinearLayout = view.findViewById(R.id.post_detail_comment_btn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedHolder {
@@ -65,22 +69,7 @@ class FeedViewAdapter(val feedList : List<Post>,
             holder.likeImageView.setImageResource(R.drawable.white_heart)
         }
         holder.likeBtn.setOnClickListener {
-            if(user.userId!=currentUserId){
-                var updatedFeed = feed
-                var list = feed.likes.toMutableList()
-                if(feed.likes.contains(currentUserId)){
-                    list.remove(currentUserId)
-                    updatedFeed.likes = list
-                    holder.likeImageView.setImageResource(R.drawable.white_heart)
-                }else{
-                    list.add(currentUserId)
-                    updatedFeed.likes = list
-                    holder.likeImageView.setImageResource(R.drawable.red_heart)
-                }
-                updateFeed(updatedFeed)
-            }else{
-                showMessage(holder.itemView.context, "Cannot like your own post.")
-            }
+            likePost(user, holder, feed)
         }
         if(user.profileImage.length>0){
             Glide.with(holder.itemView).load(user.profileImage).into(holder.userProfileImage)
@@ -95,6 +84,38 @@ class FeedViewAdapter(val feedList : List<Post>,
         }
         holder.viewRoot.setOnClickListener {
             openPostDetails(feed, false)
+        }
+        holder.commentBtn.setOnClickListener {
+            openCommentPage(feed.postId)
+        }
+        setProfilePageClickListner(holder, feed.userId)
+    }
+
+    private fun setProfilePageClickListner(holder: FeedViewAdapter.FeedHolder, userId : Long) {
+        holder.userProfileImage.setOnClickListener {
+            openProfilePage(userId)
+        }
+        holder.username.setOnClickListener {
+            openProfilePage(userId)
+        }
+    }
+
+    fun likePost(user : User, holder : FeedHolder, feed : Post){
+        if(user.userId!=currentUserId){
+            var updatedFeed = feed
+            var list = feed.likes.toMutableList()
+            if(feed.likes.contains(currentUserId)){
+                list.remove(currentUserId)
+                updatedFeed.likes = list
+                holder.likeImageView.setImageResource(R.drawable.white_heart)
+            }else{
+                list.add(currentUserId)
+                updatedFeed.likes = list
+                holder.likeImageView.setImageResource(R.drawable.red_heart)
+            }
+            updateFeed(updatedFeed)
+        }else{
+            showMessage(holder.itemView.context, "Cannot like your own post.")
         }
     }
 

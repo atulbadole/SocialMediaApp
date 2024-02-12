@@ -69,14 +69,9 @@ class ProfilePageActivity : AppCompatActivity() {
                             { updatedPost ->
                                 updatedPostList.add(updatedPost)
                             },
-                            { post : Post, editClicked : Boolean ->
-                                val intent = Intent(this@ProfilePageActivity, PostDetailActivity::class.java)
-                                intent.putExtra("postId", post.postId)
-                                intent.putExtra("editClicked", editClicked)
-                                intent.putExtra("currentUserId", currentUserId)
-                                intent.putExtra("userIdOfCurrentPost", post.userId)
-                                startActivity(intent)
-                            }
+                            ::openPostDetailPage,
+                            ::openCommentPage,
+                            ::openProfilePage
                         )
                     }
                 }
@@ -137,5 +132,28 @@ class ProfilePageActivity : AppCompatActivity() {
         for(post in updatedPostList){
             postViewModal.updatePost(post)
         }
+    }
+
+    fun openPostDetailPage(post : Post, editClicked : Boolean){
+        val intent = Intent(this@ProfilePageActivity, PostDetailActivity::class.java)
+        intent.putExtra("postId", post.postId)
+        intent.putExtra("editClicked", editClicked)
+        intent.putExtra("currentUserId", currentUserId)
+        intent.putExtra("userIdOfCurrentPost", post.userId)
+        startActivity(intent)
+    }
+
+    private fun openCommentPage(postId: Long) {
+        var intent = Intent(this, CommentActivity::class.java)
+        intent.putExtra("postId", postId)
+        intent.putExtra("currentUserId", currentUserId)
+        startActivity(intent)
+    }
+
+    fun openProfilePage(userId : Long){
+        val i = Intent(this, ProfilePageActivity::class.java)
+        i.putExtra("userId", userId)
+        i.putExtra("currentUserId", currentUserId)
+        startActivity(i)
     }
 }

@@ -1,10 +1,14 @@
 package com.capgemini.socialmediaapp.view
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +27,7 @@ class FeedActivity : AppCompatActivity() {
     lateinit var postViewModel : PostViewModal
     lateinit var recyclerView : RecyclerView
 //    var users = LiveData<List<User>>()
+    lateinit var currentUser : User
     var updatedPostList = mutableListOf<Post>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +39,11 @@ class FeedActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.feedRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        userViewModal.currentUser.observe(this){ currentUser ->
-            currentUser?.let {
+        checkForStoragePermission()
+
+        userViewModal.currentUser.observe(this){ curUser ->
+            curUser?.let {
+                currentUser = curUser
                 userViewModal.allUsers.observe(this){ users ->
                     Log.d("fromfeedactivity", "users fetched : ${users.size}")
                     val map = mutableMapOf<Long, User>()
@@ -46,22 +54,16 @@ class FeedActivity : AppCompatActivity() {
                         var sortedPosts = posts.sortedWith({ post1, post2 ->
                             post2.timestamp.compareTo(post1.timestamp)
                         })
-                        Log.d("fromfeedactivity", "posts fetched : ${sortedPosts.size}")
                         CoroutineScope(Dispatchers.Main).launch {
                             if(users.size>0){
-                                Log.d("fromfeedactivity", "users : ${users.size},map : ${map.size} , posts : ${sortedPosts.size}")
                                 recyclerView.adapter = FeedViewAdapter(sortedPosts,
                                     map,
                                     currentUser.userId,
-                                    {updatedFeed-> updatedPostList.add(updatedFeed) })
-                                    { post : Post, editClicked : Boolean ->
-                                        val intent = Intent(this@FeedActivity, PostDetailActivity::class.java)
-                                        intent.putExtra("postId", post.postId)
-                                        intent.putExtra("editClicked", editClicked)
-                                        intent.putExtra("currentUserId", currentUser.userId)
-                                        intent.putExtra("userIdOfCurrentPost", post.userId)
-                                        startActivity(intent)
-                                    }
+                                    {updatedFeed-> updatedPostList.add(updatedFeed) },
+                                    ::openPostDetailPage,
+                                    ::openCommentPage,
+                                    ::openProfilePage
+                                )
                             }
                         }
                     }
@@ -70,9 +72,42 @@ class FeedActivity : AppCompatActivity() {
         }
     }
 
+    fun openPostDetailPage(post : Post, editClicked : Boolean){
+        val intent = Intent(this@FeedActivity, PostDetailActivity::class.java)
+        intent.putExtra("postId", post.postId)
+        intent.putExtra("editClicked", editClicked)
+        intent.putExtra("currentUserId", currentUser.userId)
+        intent.putExtra("userIdOfCurrentPost", post.userId)
+        startActivity(intent)
+    }
+
+    private fun checkForStoragePermission() {
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        }
+    }
+
     fun openCreatePostActivity(view: View) {
         val intent = Intent(this, CreatePostActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==1){
+            if(grantResults[0]!=PackageManager.PERMISSION_GRANTED){
+                val dialog = AlertDialog.Builder(this@FeedActivity)
+                dialog.setMessage("Without  storage permission you won't be able to change profile photo and add post with images.")
+                .setPositiveButton("Ok"){ dialog, id ->
+                    dialog.cancel()
+                }
+                dialog.create()
+            }
+        }
     }
 
     override fun onStop() {
@@ -81,5 +116,19 @@ class FeedActivity : AppCompatActivity() {
             postViewModel.updatePost(post)
         }
         updatedPostList.clear()
+    }
+
+    private fun openCommentPage(postId: Long) {
+        var intent = Intent(this, CommentActivity::class.java)
+        intent.putExtra("postId", postId)
+        intent.putExtra("currentUserId", currentUser.userId)
+        startActivity(intent)
+    }
+
+    fun openProfilePage(userId: Long){
+        val i = Intent(this, ProfilePageActivity::class.java)
+        i.putExtra("userId", userId)
+        i.putExtra("currentUserId", currentUser.userId)
+        startActivity(i)
     }
 }

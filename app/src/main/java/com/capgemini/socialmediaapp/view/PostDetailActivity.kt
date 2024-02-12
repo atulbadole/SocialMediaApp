@@ -42,7 +42,7 @@ class PostDetailActivity : AppCompatActivity() {
 
     var currentUserEdit = -1L
     var currentPostId = -1L
-    var editBtnClickedInFeedActivity = false
+    var editBtnClicked = false
     var updatedPost : Post? = null
 
 
@@ -76,7 +76,7 @@ class PostDetailActivity : AppCompatActivity() {
         }
 
         val postId = intent.getLongExtra("postId", -1L)
-        var editBtnClicked = intent.getBooleanExtra("editClicked", false)
+        editBtnClicked = intent.getBooleanExtra("editClicked", false)
         val currentUserId = intent.getLongExtra("currentUserId", -1L)
         var userIdOfCurrentPost = intent.getLongExtra("userIdOfCurrentPost", -1L)
 
@@ -97,36 +97,7 @@ class PostDetailActivity : AppCompatActivity() {
                         if(post.imageArray.length>0){
                             Glide.with(this@PostDetailActivity).load(post.imageArray).into(postImage)
                         }
-                        if(post.userId==currentUserId){
-                            postLikeButton.setOnClickListener {
-                                showMessage(this@PostDetailActivity, "Cannot like your own post.")
-                            }
-                            postLikeBtnImage.setImageResource(R.drawable.white_heart)
-                            postEditButton.setOnClickListener {
-                                editBtnClicked = !editBtnClicked
-                                toggleEditable(editBtnClicked)
-                            }
-                            toggleEditable(editBtnClicked)
-                        }else{
-                            postEditButton.isVisible = false
-                            postEditButton.isClickable = false
-                            postLikeButton.setOnClickListener {
-                                var likeList = updatedPost!!.likes.toMutableList()
-                                if(updatedPost!!.likes.contains(currentUserId)){
-                                    postLikeBtnImage.setImageResource(R.drawable.white_heart)
-                                    likeList.remove(currentUserId)
-                                }else{
-                                    postLikeBtnImage.setImageResource(R.drawable.red_heart)
-                                    likeList.add(currentUserId)
-                                }
-                                updatedPost!!.likes = likeList
-                            }
-                            if(post.likes.contains(currentUserId)){
-                                postLikeBtnImage.setImageResource(R.drawable.red_heart)
-                            }else{
-                                postLikeBtnImage.setImageResource(R.drawable.white_heart)
-                            }
-                        }
+                        setEditButtonAndText(post, currentUserId, editBtnClicked)
                         userProfileImage.setOnClickListener {
                             val i = Intent(this, ProfilePageActivity::class.java)
                             i.putExtra("userId", post.userId)
@@ -162,6 +133,39 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    fun setEditButtonAndText(post: Post, currentUserId: Long, editClicked: Boolean){
+        editBtnClicked = editClicked
+        if(post.userId==currentUserId){
+            postLikeButton.setOnClickListener {
+                showMessage(this@PostDetailActivity, "Cannot like your own post.")
+            }
+            postLikeBtnImage.setImageResource(R.drawable.white_heart)
+            postEditButton.setOnClickListener {
+                editBtnClicked = !editBtnClicked
+                toggleEditable(editBtnClicked)
+            }
+            toggleEditable(editBtnClicked)
+        }else{
+            postEditButton.isVisible = false
+            postEditButton.isClickable = false
+            postLikeButton.setOnClickListener {
+                var likeList = updatedPost!!.likes.toMutableList()
+                if(updatedPost!!.likes.contains(currentUserId)){
+                    postLikeBtnImage.setImageResource(R.drawable.white_heart)
+                    likeList.remove(currentUserId)
+                }else{
+                    postLikeBtnImage.setImageResource(R.drawable.red_heart)
+                    likeList.add(currentUserId)
+                }
+                updatedPost!!.likes = likeList
+            }
+            if(post.likes.contains(currentUserId)){
+                postLikeBtnImage.setImageResource(R.drawable.red_heart)
+            }else{
+                postLikeBtnImage.setImageResource(R.drawable.white_heart)
+            }
+        }
+    }
 
     fun toggleEditable(editable: Boolean){
         Log.d("fromdetailactivty", "toggelEditable : ${editable}")

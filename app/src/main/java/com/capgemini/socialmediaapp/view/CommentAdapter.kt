@@ -44,19 +44,20 @@ class CommentAdapter(
         holder.time_buttonB.visibility = View.VISIBLE
         holder.editButton.visibility = if (isCurrentUser) View.VISIBLE else View.GONE
         holder.commentTextView.setEnabled(false)
-//        holder.editButton.isActivated = false
-//        holder.editButton.setFocusable(false)
         holder.editButton.setOnClickListener{
             if(holder.editButton.text.toString().equals("Edit")){
                 holder.editButton.setText("Save")
-//                holder.editButton.isActivated = true
                 holder.commentTextView.isEnabled = true
-//                holder.editButton.setFocusable(true)
             }else{
                 holder.editButton.setText("Edit")
                 holder.commentTextView.isEnabled = false
-                comment.commentMessage = holder.commentTextView.text.toString()
-                clickListener(comment)
+                if(holder.commentTextView.text.toString().trim().length>0){
+                    showMessage(holder.itemView.context, "Empty comments are not allowed")
+                    holder.commentTextView.setText(comment.commentMessage)
+                }else{
+                    comment.commentMessage = holder.commentTextView.text.toString()
+                    clickListener(comment)
+                }
             }
         }
     }
