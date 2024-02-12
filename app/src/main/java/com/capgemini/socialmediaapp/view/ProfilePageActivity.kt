@@ -1,9 +1,7 @@
 package com.capgemini.socialmediaapp.view
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,6 +10,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.ContentInfoCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,7 +65,6 @@ class ProfilePageActivity : AppCompatActivity() {
                         recyclerView.adapter = FeedViewAdapter(
                             posts,
                             mutableMapOf(userId to user),
-                            this,
                             currentUserId,
                             { updatedPost ->
                                 updatedPostList.add(updatedPost)
@@ -125,8 +123,10 @@ class ProfilePageActivity : AppCompatActivity() {
     }
 
     fun logoutClick(view: View) {
-//        val i = Intent(this, loginActivity::class.java)
-//        startActivity(i)
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        userViewModal.logout()
+        startActivity(intent)
     }
 
     override fun onStop() {

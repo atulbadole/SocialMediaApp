@@ -57,9 +57,9 @@ class PostViewModal(application: Application) : AndroidViewModel(application) {
     }
 
     fun getPost(postId : Long){
-//        viewModelScope.launch {
-//
-//        }
+        viewModelScope.launch(Dispatchers.IO) {
+
+        }
         CoroutineScope(Dispatchers.Default).launch {
             try{
                 val data = repo.getPost(postId)

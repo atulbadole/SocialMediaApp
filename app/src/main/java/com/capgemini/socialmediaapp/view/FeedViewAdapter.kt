@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 
 class FeedViewAdapter(val feedList : List<Post>,
                       val userDetailsMap : Map<Long, User>,
-                      val ctx : Context,
+                      //val ctx : Context,
                       val currentUserId : Long,
                       val updateFeed : (Post)->Unit,
                       val openPostDetails : (Post, Boolean)->Unit
@@ -56,7 +56,7 @@ class FeedViewAdapter(val feedList : List<Post>,
         holder.textContent.text = feed.textContent
         if(feed.imageArray.length>0){
             Log.d("fromFeedAdapter", "adding image")
-            Glide.with(ctx).load(feed.imageArray).into(holder.image)
+            Glide.with(holder.itemView).load(feed.imageArray).into(holder.image)
         }
         holder.postTime.text = getTimePassedString(feed.timestamp)
         if(feed.likes.contains(currentUserId)){
@@ -79,11 +79,11 @@ class FeedViewAdapter(val feedList : List<Post>,
                 }
                 updateFeed(updatedFeed)
             }else{
-                showMessage(ctx, "Cannot like your own post.")
+                showMessage(holder.itemView.context, "Cannot like your own post.")
             }
         }
         if(user.profileImage.length>0){
-            Glide.with(ctx).load(user.profileImage).into(holder.userProfileImage)
+            Glide.with(holder.itemView).load(user.profileImage).into(holder.userProfileImage)
         }
         if(feed.userId!=currentUserId){
             holder.feedEditBtn.isClickable = false

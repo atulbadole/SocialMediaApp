@@ -97,4 +97,8 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
         }
     }
 
+    fun logout() {
+        TODO("Not yet implemented")
+    }
+
 }

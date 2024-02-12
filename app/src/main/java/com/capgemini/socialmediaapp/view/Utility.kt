@@ -11,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import java.time.Duration
 import java.time.LocalDateTime
 
+fun AppCompatActivity.showToast(msg: String){
+    Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+}
+
 fun showMessage(ctx : Context, message : String){
     Toast.makeText(ctx, message, Toast.LENGTH_LONG).show()
 }
@@ -27,15 +31,6 @@ fun getTimePassedString(dateTime: LocalDateTime) : String {
     }
 }
 
-//val pickImageLauncher = AppCompatActivity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//    if (result.resultCode == Activity.RESULT_OK) {
-//        result.data?.data?.let{
-//            val imageUri = it
-//            postImage.setImageURI(imageUri)
-//            updatedPost!!.imageArray = getImagePath(imageUri)
-//        }
-//    }
-//}
 
 fun getImagePath(imageUri: Uri, contentResolver : ContentResolver): String {
     val projection = arrayOf(MediaStore.Images.Media.DATA)

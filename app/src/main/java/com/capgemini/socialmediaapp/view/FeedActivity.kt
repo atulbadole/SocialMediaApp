@@ -52,7 +52,6 @@ class FeedActivity : AppCompatActivity() {
                                 Log.d("fromfeedactivity", "users : ${users.size},map : ${map.size} , posts : ${sortedPosts.size}")
                                 recyclerView.adapter = FeedViewAdapter(sortedPosts,
                                     map,
-                                    this@FeedActivity,
                                     currentUser.userId,
                                     {updatedFeed-> updatedPostList.add(updatedFeed) })
                                     { post : Post, editClicked : Boolean ->
