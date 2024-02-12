@@ -119,7 +119,7 @@ class ProfilePageActivity : AppCompatActivity() {
 
     fun logoutClick(view: View) {
         val intent = Intent(this, LoginActivity::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         userViewModal.logout()
         startActivity(intent)
     }

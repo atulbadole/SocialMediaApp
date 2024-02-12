@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:elevation="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/c_selectImageView"
+        app:layout_constraintBottom_toTopOf="@+id/c_image_options"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
-                    android:foreground="@android:drawable/btn_star_big_on" />
+                    android:foreground="@drawable/profile_photo" />
             </androidx.cardview.widget.CardView>
 
             <EditText
@@ -86,6 +86,7 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/c_image_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/light_background"

@@ -48,14 +48,6 @@ class LoginActivity : AppCompatActivity() {
             if(loginBtnClicked){
                 loginBtnClicked = false
                 if(it!=null){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        it?.let{
-                            var pref = this@LoginActivity.getSharedPreferences("final", MODE_PRIVATE)
-                            var editor = pref.edit()
-                            editor.putLong("loggedInUserID",it.userId.toLong())
-                            editor.apply()
-                        }
-                    }
                     val intent = Intent(this,FeedActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -67,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
         }
         SignInButton.setOnClickListener{
             if(validateDetails(LoginEmail.text.toString(), LoginPassword.text.toString())){
-                userViewModal.login(LoginEmail.text.toString(),LoginPassword.text.toString(), this)
+                userViewModal.login(LoginEmail.text.toString(),LoginPassword.text.toString())
                 loginBtnClicked = true
             }else{
                 Toast.makeText(this, "Invalid Login Credentials", Toast.LENGTH_LONG).show()

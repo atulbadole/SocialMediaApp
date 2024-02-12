@@ -16,6 +16,8 @@ import java.util.TimerTask
 class MainActivity : AppCompatActivity() {
 
     lateinit var userViewModal: UserViewModal
+    var firstTime = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,14 +27,18 @@ class MainActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.Main).launch {
                     userViewModal.fetchCurrentUserDetails(this@MainActivity)
                     userViewModal.currentUser.observe(this@MainActivity){
-                        if(it==null){
-                            val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                            startActivity(intent)
+                        if(!firstTime){
+                            if(it==null){
+                                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                                startActivity(intent)
+                            }else{
+                                val intent = Intent(this@MainActivity, FeedActivity::class.java)
+                                startActivity(intent)
+                            }
+                            finish()
                         }else{
-                            val intent = Intent(this@MainActivity, FeedActivity::class.java)
-                            startActivity(intent)
+                            firstTime = false
                         }
-                        finish()
                     }
                 }
             }

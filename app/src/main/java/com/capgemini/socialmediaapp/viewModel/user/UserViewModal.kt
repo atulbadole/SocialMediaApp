@@ -35,6 +35,8 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
             viewModelScope.launch(Dispatchers.Default) {
                 currentUser.postValue(repo.getuserDetails(userId))
             }
+        }else{
+            currentUser.postValue(null)
         }
     }
 
@@ -77,28 +79,26 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
         }
     }
 
-    fun login(username : String, password: String, ctx: Context) {
-        if(password==""){
-
-        }else{
-            val loginTask = CoroutineScope(Dispatchers.Default).launch {
+    fun login(username : String, password: String) {
+            CoroutineScope(Dispatchers.Default).launch {
                 var data = repo.login(username, password)
                 CoroutineScope(Dispatchers.Main).launch {
                     currentUser.postValue(data)
-//                    data?.let{
-//                        var pref = ctx.getSharedPreferences("socialmedia", MODE_PRIVATE)
-//                        var editor = pref.edit()
-//                        editor.putLong("userId",it.userId)
-//                        editor.commit()
-//                    }
-                    Log.d("loginModal","${data}")
+                    data?.let{
+                        var pref = ctx.getSharedPreferences("final", MODE_PRIVATE)
+                        var editor = pref.edit()
+                        editor.putLong("loggedInUserID",it.userId)
+                        editor.apply()
+                    }
                 }
             }
-        }
     }
 
-    fun logout() {
-        TODO("Not yet implemented")
+    fun logout(){
+        var pref = ctx.getSharedPreferences("final", MODE_PRIVATE)
+        var editor = pref.edit()
+        editor.putLong("loggedInUserID",-1)
+        editor.apply()
     }
 
 }

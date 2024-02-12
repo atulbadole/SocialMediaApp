@@ -41,7 +41,7 @@ class FeedViewAdapter(val feedList : List<Post>,
         val likeImageView : ImageView = view.findViewById(R.id.feed_like_image)
         val feedEditBtn : CardView = view.findViewById(R.id.feed_edit_btn)
         val viewRoot = view
-        val commentBtn : LinearLayout = view.findViewById(R.id.post_detail_comment_btn)
+        val commentBtn : LinearLayout = view.findViewById(R.id.feed_item_comment_btn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedHolder {

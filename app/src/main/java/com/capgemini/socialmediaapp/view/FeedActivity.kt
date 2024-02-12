@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.capgemini.socialmediaapp.R
 import com.capgemini.socialmediaapp.model.post.Post
 import com.capgemini.socialmediaapp.model.user.User
@@ -26,15 +28,17 @@ class FeedActivity : AppCompatActivity() {
     lateinit var userViewModal : UserViewModal
     lateinit var postViewModel : PostViewModal
     lateinit var recyclerView : RecyclerView
+    lateinit var addPostProfileImage : ImageView
 //    var users = LiveData<List<User>>()
     lateinit var currentUser : User
     var updatedPostList = mutableListOf<Post>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
         userViewModal = ViewModelProvider(this).get(UserViewModal::class.java)
         postViewModel = ViewModelProvider(this).get(PostViewModal::class.java)
-
+        addPostProfileImage = findViewById(R.id.feed_page_user_profile_image)
         userViewModal.fetchCurrentUserDetails(this)
         recyclerView = findViewById(R.id.feedRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -44,6 +48,13 @@ class FeedActivity : AppCompatActivity() {
         userViewModal.currentUser.observe(this){ curUser ->
             curUser?.let {
                 currentUser = curUser
+                try{
+                    if(currentUser.profileImage.length>0){
+                        Glide.with(this).load(currentUser.profileImage).into(addPostProfileImage)
+                    }
+                }catch (e : Exception){
+                    Log.d("fromfeedactivity", "Error while setting add post profile image : ${e.localizedMessage}")
+                }
                 userViewModal.allUsers.observe(this){ users ->
                     Log.d("fromfeedactivity", "users fetched : ${users.size}")
                     val map = mutableMapOf<Long, User>()
@@ -67,6 +78,9 @@ class FeedActivity : AppCompatActivity() {
                             }
                         }
                     }
+                }
+                addPostProfileImage.setOnClickListener{
+                    openProfilePage(currentUser.userId)
                 }
             }
         }

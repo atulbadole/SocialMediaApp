@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.capgemini.socialmediaapp.R
 import com.capgemini.socialmediaapp.model.comment.Comment
 import com.capgemini.socialmediaapp.model.user.User
@@ -18,12 +19,12 @@ import java.time.LocalDateTime
 
 class CommentActivity : AppCompatActivity() {
 
-    private lateinit var adapter: CommentAdapter
     private lateinit var commentEditText: EditText
     private lateinit var commentViewModel : CommentViewModal
     private lateinit var userViewModel : UserViewModal
     private lateinit var commentRecyclerView: RecyclerView
     private lateinit var sendButton: ImageView
+    private lateinit var profilePhoto : ImageView
     private var currentUserId: Long = -1L
     private var postId = -1L
 
@@ -36,6 +37,7 @@ class CommentActivity : AppCompatActivity() {
         commentViewModel=ViewModelProvider(this).get(CommentViewModal::class.java)
         userViewModel=ViewModelProvider(this).get(UserViewModal::class.java)
         sendButton = findViewById(R.id.send_button)
+        profilePhoto = findViewById(R.id.comment_add_profile_photo)
 
         currentUserId = intent.getLongExtra("currentUserId", -1L)
         postId = intent.getLongExtra("postId",-1L)
@@ -48,6 +50,14 @@ class CommentActivity : AppCompatActivity() {
                     map.put(i.userId, i)
                 }
                 commentViewModel.getComments(postId)
+                val currentuser = map[currentUserId]!!
+                try{
+                    if(currentuser.profileImage.length>0){
+                        Glide.with(this@CommentActivity).load(currentuser.profileImage).into(profilePhoto)
+                    }
+                }catch (e : Exception){
+                    Log.d("fromcommentactivity","Error while setting user profile image : ${e.localizedMessage}")
+                }
                 commentViewModel.allCommentsData.observe(this){ commentList ->
                     Log.d("fromcommmentactivity", "fetched comments : ${commentList}")
                      commentList?.let {
