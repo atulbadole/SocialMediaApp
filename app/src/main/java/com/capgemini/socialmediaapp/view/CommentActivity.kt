@@ -11,11 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.capgemini.socialmediaapp.R
-import com.capgemini.socialmediaapp.model.comment.Comment
 import com.capgemini.socialmediaapp.model.user.User
 import com.capgemini.socialmediaapp.viewModel.comment.CommentViewModal
 import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
-import java.time.LocalDateTime
 
 class CommentActivity : AppCompatActivity() {
 
@@ -43,7 +41,6 @@ class CommentActivity : AppCompatActivity() {
         postId = intent.getLongExtra("postId",-1L)
 
         userViewModel.allUsers.observe(this){ users ->
-            Log.d("fromcommentactivity", "fetched users : ${users}")
             users?.let {
                 val map = mutableMapOf<Long, User>()
                 for( i in users){
@@ -59,7 +56,6 @@ class CommentActivity : AppCompatActivity() {
                     Log.d("fromcommentactivity","Error while setting user profile image : ${e.localizedMessage}")
                 }
                 commentViewModel.allCommentsData.observe(this){ commentList ->
-                    Log.d("fromcommmentactivity", "fetched comments : ${commentList}")
                      commentList?.let {
                          var sortedComments = commentList.sortedWith({ comment1, comment2 ->
                              comment2.timestamp.compareTo(comment1.timestamp)
@@ -81,7 +77,6 @@ class CommentActivity : AppCompatActivity() {
         sendButton.setOnClickListener {
             val commentText = commentEditText.text.toString().trim()
             if (commentText.isNotEmpty()) {
-                Log.d("fromcommentactivity", "data being sended : ${postId}, ${currentUserId}")
                 commentViewModel.addComment(commentText, postId, currentUserId)
                 commentEditText.text.clear()
             }else{

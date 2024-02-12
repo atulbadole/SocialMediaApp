@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SocialMediaApp</string>
+    <string name="app_name">ConnectHub</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

@@ -40,8 +40,6 @@ class PostDetailActivity : AppCompatActivity() {
     lateinit var addImageButton : LinearLayout
     lateinit var clearImageButton : LinearLayout
 
-    var currentUserEdit = -1L
-    var currentPostId = -1L
     var editBtnClicked = false
     var updatedPost : Post? = null
 
@@ -78,7 +76,6 @@ class PostDetailActivity : AppCompatActivity() {
         val postId = intent.getLongExtra("postId", -1L)
         editBtnClicked = intent.getBooleanExtra("editClicked", false)
         val currentUserId = intent.getLongExtra("currentUserId", -1L)
-        var userIdOfCurrentPost = intent.getLongExtra("userIdOfCurrentPost", -1L)
 
         postViewModal.postData.observe(this){ post ->
             Log.d("frompostdetailactivity", "for post : ${post}")
@@ -90,13 +87,17 @@ class PostDetailActivity : AppCompatActivity() {
                         updatedPost = post
                         username.text = user.name
                         postText.setText(post.textContent)
-                        if(user.profileImage.length>0){
-                            Glide.with(this@PostDetailActivity).load(user.profileImage).into(userProfileImage)
+                        try{
+                            if(user.profileImage.length>0){
+                                Glide.with(this@PostDetailActivity).load(user.profileImage).into(userProfileImage)
+                            }
+                            if(post.imageArray.length>0){
+                                Glide.with(this@PostDetailActivity).load(post.imageArray).into(postImage)
+                            }
+                        }catch (e : Exception){
+                            Log.d("frompostdetailactivity", "Error while setting image : ${e.localizedMessage}")
                         }
                         postTime.text = getTimePassedString(post.timestamp)
-                        if(post.imageArray.length>0){
-                            Glide.with(this@PostDetailActivity).load(post.imageArray).into(postImage)
-                        }
                         setEditButtonAndText(post, currentUserId, editBtnClicked)
                         userProfileImage.setOnClickListener {
                             val i = Intent(this, ProfilePageActivity::class.java)
@@ -169,14 +170,11 @@ class PostDetailActivity : AppCompatActivity() {
 
     fun toggleEditable(editable: Boolean){
         Log.d("fromdetailactivty", "toggelEditable : ${editable}")
-        postText.isFocusable = editable
-        postText.isClickable = editable
+        postText.isEnabled = editable
         imageEditingOptionsContainer.isClickable = editable
         imageEditingOptionsContainer.isVisible = editable
         if(editable){
             (postEditButton.getChildAt(0) as TextView).text = "Save"
-            postText.isFocusable = true
-            postText.isClickable = true
             postText.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_CLASS_TEXT
         }else{
             (postEditButton.getChildAt(0) as TextView).text = "Edit"

@@ -58,9 +58,9 @@ class SignUpActivity : AppCompatActivity() {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
-                Toast.makeText(this,"SignUp Successful",Toast.LENGTH_LONG).show()
+                showToast("SignUp Successful")
             }else{
-                Toast.makeText(this,"Invalid SignUp Credentials",Toast.LENGTH_LONG).show()
+                showToast("Invalid SignUp Credentials")
             }
 
         }

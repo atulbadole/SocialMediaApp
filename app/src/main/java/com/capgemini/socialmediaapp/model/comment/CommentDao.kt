@@ -1,13 +1,9 @@
 package com.capgemini.socialmediaapp.model.comment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.capgemini.socialmediaapp.model.comment.Comment
-import com.capgemini.socialmediaapp.model.post.Post
 
 @Dao
 interface CommentDao {
@@ -19,6 +15,5 @@ interface CommentDao {
 
     @Query("select * from comment where postId=:id")
     fun getComments(id : Long) : List<Comment>
-            //LiveData<List<Comment>>
 
 }

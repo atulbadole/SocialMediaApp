@@ -26,6 +26,7 @@ class UserViewModal(val ctx : Application) : AndroidViewModel(ctx) {
     val userData = MutableLiveData<User?>(null)
     val currentUser = MutableLiveData<User?>(null)
     val allUsers = repo.getAllUsers()
+
     fun fetchCurrentUserDetails(con : Context) {
         val pref = con.applicationContext.getSharedPreferences("final", MODE_PRIVATE)
         Log.d("userviewmodal", "${pref.all}")

@@ -44,8 +44,6 @@ class CommentViewModal(application: Application) : AndroidViewModel(application)
     }
 
     fun getComments(id : Long){
-        //allCommentsData.value = repo.getComments(id)
-       // allCommentsData.postValue(repo.getComments(id).value)
         viewModelScope.launch(Dispatchers.Default) {
             try{
                 val data = repo.getComments(id)

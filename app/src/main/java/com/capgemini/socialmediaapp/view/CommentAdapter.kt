@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -51,7 +50,7 @@ class CommentAdapter(
             }else{
                 holder.editButton.setText("Edit")
                 holder.commentTextView.isEnabled = false
-                if(holder.commentTextView.text.toString().trim().length>0){
+                if(holder.commentTextView.text.toString().trim().length==0){
                     showMessage(holder.itemView.context, "Empty comments are not allowed")
                     holder.commentTextView.setText(comment.commentMessage)
                 }else{

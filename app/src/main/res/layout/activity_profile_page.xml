@@ -97,7 +97,6 @@
                     android:layout_marginTop="0dp"
                     android:background="@color/transparent"
                     android:clickable="false"
-                    android:onClick="imageClick"
                     android:scaleType="centerCrop"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -97,8 +97,7 @@ class ProfilePageActivity : AppCompatActivity() {
 
     private fun disableEditTexts() {
         for(view in listOf(userName, userBio)){
-            view.isClickable = false
-            view.isFocusable = false
+            view.isEnabled = false
         }
     }
 

@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +28,6 @@ class FeedActivity : AppCompatActivity() {
     lateinit var postViewModel : PostViewModal
     lateinit var recyclerView : RecyclerView
     lateinit var addPostProfileImage : ImageView
-//    var users = LiveData<List<User>>()
     lateinit var currentUser : User
     var updatedPostList = mutableListOf<Post>()
 

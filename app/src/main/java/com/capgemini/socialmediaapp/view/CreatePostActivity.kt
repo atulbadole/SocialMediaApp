@@ -2,7 +2,6 @@
 package com.capgemini.socialmediaapp.view
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,7 +18,6 @@ import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
 
 class CreatePostActivity : AppCompatActivity() {
 
-    private val PICK_IMAGE_REQUEST = 1
     private lateinit var imageView: LinearLayout
     private lateinit var clearImageView : LinearLayout
     private lateinit var postimage: ImageView
@@ -40,7 +38,6 @@ class CreatePostActivity : AppCompatActivity() {
                 val imageUri = it
                 postimage.setImageURI(imageUri)
                 postImagePath = getImagePath(imageUri, contentResolver)
-                Log.d("localimagepath", "${postImagePath}")
             }
         }
     }
@@ -81,10 +78,10 @@ class CreatePostActivity : AppCompatActivity() {
             if(postButtonClicked){
                 postButtonClicked = false
                 if(it){
-                    Toast.makeText(this, "Post created successfully", Toast.LENGTH_LONG).show()
+                    showToast("Post created successfully")
                     finish()
                 }else{
-                    Toast.makeText(this, "Error while creating post, Please try again later", Toast.LENGTH_LONG).show()
+                    showToast("Error while creating post, Please try again later")
                 }
             }
         }

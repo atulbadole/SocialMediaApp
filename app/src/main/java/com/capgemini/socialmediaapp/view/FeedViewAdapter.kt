@@ -1,7 +1,5 @@
 package com.capgemini.socialmediaapp.view
 
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -19,8 +15,6 @@ import com.bumptech.glide.Glide
 import com.capgemini.socialmediaapp.R
 import com.capgemini.socialmediaapp.model.post.Post
 import com.capgemini.socialmediaapp.model.user.User
-import java.time.Duration
-import java.time.LocalDateTime
 
 class FeedViewAdapter(val feedList : List<Post>,
                       val userDetailsMap : Map<Long, User>,
@@ -58,10 +52,6 @@ class FeedViewAdapter(val feedList : List<Post>,
         val user = userDetailsMap[feed.userId]!!
         holder.username.text = user.name
         holder.textContent.text = feed.textContent
-        if(feed.imageArray.length>0){
-            Log.d("fromFeedAdapter", "adding image")
-            Glide.with(holder.itemView).load(feed.imageArray).into(holder.image)
-        }
         holder.postTime.text = getTimePassedString(feed.timestamp)
         if(feed.likes.contains(currentUserId)){
             holder.likeImageView.setImageResource(R.drawable.red_heart)
@@ -71,8 +61,15 @@ class FeedViewAdapter(val feedList : List<Post>,
         holder.likeBtn.setOnClickListener {
             likePost(user, holder, feed)
         }
-        if(user.profileImage.length>0){
-            Glide.with(holder.itemView).load(user.profileImage).into(holder.userProfileImage)
+        try{
+            if(feed.imageArray.length>0){
+                Glide.with(holder.itemView).load(feed.imageArray).into(holder.image)
+            }
+            if(user.profileImage.length>0){
+                Glide.with(holder.itemView).load(user.profileImage).into(holder.userProfileImage)
+            }
+        }catch(e : Exception){
+            Log.d("fromFeedAdapter", "Error while setting image : ${e.localizedMessage}")
         }
         if(feed.userId!=currentUserId){
             holder.feedEditBtn.isClickable = false

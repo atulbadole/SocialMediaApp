@@ -1,25 +1,17 @@
 package com.capgemini.socialmediaapp.view
 
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.capgemini.socialmediaapp.R
 import com.capgemini.socialmediaapp.model.user.User
 import com.capgemini.socialmediaapp.viewModel.user.UserViewModal
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     lateinit var  SignUpButton : TextView
@@ -51,9 +43,9 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this,FeedActivity::class.java)
                     startActivity(intent)
                     finish()
-                    Toast.makeText(this,"Login Successful",Toast.LENGTH_LONG).show()
+                    showToast("Login Successful")
                 }else{
-                    Toast.makeText(this, "Invalid Login Credentials", Toast.LENGTH_LONG).show()
+                    showToast( "Invalid Login Credentials")
                 }
             }
         }
@@ -62,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
                 userViewModal.login(LoginEmail.text.toString(),LoginPassword.text.toString())
                 loginBtnClicked = true
             }else{
-                Toast.makeText(this, "Invalid Login Credentials", Toast.LENGTH_LONG).show()
+                showToast("Invalid Login Credentials")
             }
         }
 
