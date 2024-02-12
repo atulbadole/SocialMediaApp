@@ -18,6 +18,7 @@ interface CommentDao {
     suspend fun updateComment(updatedCommet : Comment)
 
     @Query("select * from comment where postId=:id")
-    fun getComments(id : Long) : LiveData<List<Comment>?>
+    fun getComments(id : Long) : List<Comment>
+            //LiveData<List<Comment>>
 
 }

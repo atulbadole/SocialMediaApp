@@ -43,15 +43,18 @@ class CommentAdapter(
         holder.time_buttonB.text = getTimePassedString(comment.timestamp)
         holder.time_buttonB.visibility = View.VISIBLE
         holder.editButton.visibility = if (isCurrentUser) View.VISIBLE else View.GONE
+        holder.commentTextView.setEnabled(false)
+//        holder.editButton.isActivated = false
+//        holder.editButton.setFocusable(false)
         holder.editButton.setOnClickListener{
             if(holder.editButton.text.toString().equals("Edit")){
                 holder.editButton.setText("Save")
-                holder.editButton.isClickable = true
-                holder.editButton.isFocusable = true
+//                holder.editButton.isActivated = true
+                holder.commentTextView.isEnabled = true
+//                holder.editButton.setFocusable(true)
             }else{
                 holder.editButton.setText("Edit")
-                holder.editButton.isClickable = false
-                holder.editButton.isFocusable = false
+                holder.commentTextView.isEnabled = false
                 comment.commentMessage = holder.commentTextView.text.toString()
                 clickListener(comment)
             }
@@ -63,7 +66,7 @@ class CommentAdapter(
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val commentNameTextView: TextView = itemView.findViewById(R.id.commentNameTextView)
         val commentTextView: EditText = itemView.findViewById(R.id.commentTextView)
-        val editButton: Button = itemView.findViewById(R.id.editButton)
+        val editButton: TextView = itemView.findViewById(R.id.editButton)
         val time_buttonB: TextView = itemView.findViewById(R.id.time_buttonB)
         val userProfilePhoto : ImageView= itemView.findViewById(R.id.commentImageView)
 

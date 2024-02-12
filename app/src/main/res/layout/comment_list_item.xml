@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
-    android:elevation="8dp"
-    app:cardElevation="5dp">
+    android:layout_marginBottom="5dp"
+    android:elevation="18dp"
+    app:cardElevation="15dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -98,10 +99,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:clickable="true"
             android:ellipsize="end"
+            android:enabled="false"
+            android:focusable="true"
             android:paddingHorizontal="40dp"
             android:paddingVertical="10dp"
             android:text="I am creating an android application that scans ID cards, so I am using the new API camerax, the problem is that I want to change the previewed image of the camera to draw a faded rectangle over the ID card while scanning."
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
