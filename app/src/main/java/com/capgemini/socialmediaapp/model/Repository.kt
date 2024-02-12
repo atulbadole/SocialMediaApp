@@ -82,7 +82,7 @@ class Repository(val ctx : Context) {
     val commentDao = AppDatabase.getInstance(ctx).commentDao()
 
     suspend fun addComment(message : String, postId : Long, userId: Long){
-        commentDao.addComment(Comment(0, message, postId,userId, LocalDateTime.now()))
+        commentDao.addComment(Comment( message, postId,userId, LocalDateTime.now()))
     }
 
     suspend fun updateComment(updatedComment: Comment){

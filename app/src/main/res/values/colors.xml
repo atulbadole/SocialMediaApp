@@ -10,4 +10,5 @@
     <color name="app_text_background">#f6fbff</color>
     <color name="light_background">#FFF9F9</color>
     <color name="transparent">#00000000</color>
+    <color name="time_text_color">#8A8989</color>
 </resources>

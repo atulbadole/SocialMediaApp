@@ -23,18 +23,22 @@ class CommentActivity : AppCompatActivity() {
     private lateinit var userViewModel : UserViewModal
     private lateinit var commentRecyclerView: RecyclerView
     private lateinit var sendButton: ImageView
-    private val comments = mutableListOf<Comment>()
-    private val currentUserId: Long = 123456789 // Replace with the actual user ID
-    private  var lastCommentTime: LocalDateTime?=null
-    private  var editedCommentPosition:Int?=null
+    private var currentUserId: Long = -1L
+    private var postId = -1L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
         commentRecyclerView = findViewById(R.id.commentRecyclerView)
+        commentRecyclerView.layoutManager = LinearLayoutManager(this)
         commentEditText = findViewById(R.id.commentEditText)
         commentViewModel=ViewModelProvider(this).get(CommentViewModal::class.java)
         userViewModel=ViewModelProvider(this).get(UserViewModal::class.java)
         sendButton = findViewById(R.id.send_button)
+
+        currentUserId = intent.getLongExtra("currentUserId", -1L)
+        postId = intent.getLongExtra("postId",-1L)
+
         userViewModel.allUsers.observe(this){ users ->
             users?.let {
                 val map = mutableMapOf<Long, User>()
@@ -45,43 +49,26 @@ class CommentActivity : AppCompatActivity() {
                 commentViewModel.allCommentsData.observe(this){ commentList ->
                      commentList?.let {
                         commentRecyclerView.adapter=CommentAdapter(
-                            commentList,map,currentUserId, this,{ commentObject,edited ->
-                                if(edited){
-                                    commentViewModel.updateComment(commentObject)
-                                }
-                                else{
-                                    commentViewModel.addComment(commentObject)
-                                }
-
+                            commentList,
+                            map,
+                            currentUserId,
+                            this,
+                            { updatedComment ->
+                                commentViewModel.updateComment(updatedComment)
                             }
                         )
-
-
                     }
                 }
             }
         }
 
-
-        commentRecyclerView.adapter = adapter
-        commentRecyclerView.layoutManager = LinearLayoutManager(this)
         sendButton.setOnClickListener {
             val commentText = commentEditText.text.toString().trim()
             if (commentText.isNotEmpty()) {
-                val currentTime = LocalDateTime.now()
-                lastCommentTime = currentTime
-                if (editedCommentPosition != null) {
-                    var editedComment = comments[editedCommentPosition!!]
-                    editedComment.commentText = commentText
-                    editedComment.time = currentTime
-                    adapter.notifyItemChanged(editedCommentPosition!!)
-                    editedCommentPosition = null
-                }
-                else{
-
-                }
+                commentViewModel.addComment(commentText, postId, currentUserId)
                 commentEditText.text.clear()
-                commentRecyclerView.scrollToPosition(0)
+            }else{
+                showMessage(this, "Cannot add empty comment")
             }
         }
     }

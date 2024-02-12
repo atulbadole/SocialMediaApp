@@ -133,6 +133,12 @@ class PostDetailActivity : AppCompatActivity() {
                             i.putExtra("currentUserId", currentUserId)
                             startActivity(i)
                         }
+                        postCommentButton.setOnClickListener {
+                            var intent = Intent(this, CommentActivity::class.java)
+                            intent.putExtra("postId", postId)
+                            intent.putExtra("currentUserData", currentUserId)
+                            startActivity(intent)
+                        }
                     }
                 }
             }

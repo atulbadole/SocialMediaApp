@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -18,10 +19,9 @@ import com.capgemini.socialmediaapp.model.user.User
 class CommentAdapter(
     val comments: List<Comment>,
     val userMap : MutableMap<Long, User>,
-
     val currentUserId: Long,
     val ctx : Context,
-    val clickListener: (Int,Boolean) ->Unit
+    val clickListener: (Comment)->Unit
 ) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
 
@@ -35,29 +35,34 @@ class CommentAdapter(
         val user=userMap[comment.userId]!!
         val isCurrentUser = comment.userId == currentUserId
         holder.updateEditButtonVisibility(comment.userId==currentUserId)
-        holder.commentNameTextView.text = user.name
+        holder.commentNameTextView.setText(user.name)
         if (user.profileImage.length>0){
             Glide.with(ctx).load(user.profileImage).into(holder.userProfilePhoto)
         }
-        holder.commentTextView.text = comment.commentMessage
+        holder.commentTextView.setText(comment.commentMessage)
         holder.time_buttonB.text = getTimePassedString(comment.timestamp)
         holder.time_buttonB.visibility = View.VISIBLE
         holder.editButton.visibility = if (isCurrentUser) View.VISIBLE else View.GONE
         holder.editButton.setOnClickListener{
-            clickListener(Comment())
+            if(holder.editButton.text.toString().equals("Edit")){
+                holder.editButton.setText("Save")
+                holder.editButton.isClickable = true
+                holder.editButton.isFocusable = true
+            }else{
+                holder.editButton.setText("Edit")
+                holder.editButton.isClickable = false
+                holder.editButton.isFocusable = false
+                comment.commentMessage = holder.commentTextView.text.toString()
+                clickListener(comment)
+            }
         }
-
     }
 
     override fun getItemCount(): Int = comments.size
 
-    fun addComment(comment: Comment) {
-        notifyDataSetChanged()
-    }
-
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val commentNameTextView: TextView = itemView.findViewById(R.id.commentNameTextView)
-        val commentTextView: TextView = itemView.findViewById(R.id.commentTextView)
+        val commentTextView: EditText = itemView.findViewById(R.id.commentTextView)
         val editButton: Button = itemView.findViewById(R.id.editButton)
         val time_buttonB: TextView = itemView.findViewById(R.id.time_buttonB)
         val userProfilePhoto : ImageView= itemView.findViewById(R.id.commentImageView)

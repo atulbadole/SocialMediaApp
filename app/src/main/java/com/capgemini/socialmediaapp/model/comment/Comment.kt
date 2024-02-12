@@ -22,10 +22,10 @@ import java.time.LocalDateTime
     ]
 )
 data class Comment(
-    @PrimaryKey(autoGenerate = true) val commentId : Long,
     var commentMessage : String,
     val postId : Long,
     val userId : Long,
-    var timestamp : LocalDateTime
+    var timestamp : LocalDateTime,
+    @PrimaryKey(autoGenerate = true) val commentId : Long = 0L
 ) {
 }

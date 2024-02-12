@@ -75,7 +75,7 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="2mins ago"
-                            android:textColor="#8A8989"
+                            android:textColor="@color/time_text_color"
                             android:textSize="12sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/post_detail_username" />
