@@ -89,9 +89,7 @@ class Repository(val ctx : Context) {
         commentDao.updateComment(updatedComment)
     }
 
-    fun getComments(id : Long) : LiveData<List<Comment>?> {
-        return commentDao.getComments(id)
-    }
+    fun getComments(id : Long) = commentDao.getComments(id)
 
 //    -------------------------------- Comment Section Ends here ---------------------------------
 }

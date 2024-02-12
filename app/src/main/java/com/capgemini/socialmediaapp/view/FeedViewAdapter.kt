@@ -54,10 +54,6 @@ class FeedViewAdapter(val feedList : List<Post>,
         val user = userDetailsMap[feed.userId]!!
         holder.username.text = user.name
         holder.textContent.text = feed.textContent
-        if(feed.imageArray.length>0){
-            Log.d("fromFeedAdapter", "adding image")
-            Glide.with(ctx).load(feed.imageArray).into(holder.image)
-        }
         holder.postTime.text = getTimePassedString(feed.timestamp)
         if(feed.likes.contains(currentUserId)){
             holder.likeImageView.setImageResource(R.drawable.red_heart)
@@ -82,8 +78,16 @@ class FeedViewAdapter(val feedList : List<Post>,
                 showMessage(ctx, "Cannot like your own post.")
             }
         }
-        if(user.profileImage.length>0){
-            Glide.with(ctx).load(user.profileImage).into(holder.userProfileImage)
+        try{
+            if(user.profileImage.length>0){
+                Glide.with(ctx).load(user.profileImage).into(holder.userProfileImage)
+            }
+            if(feed.imageArray.length>0){
+                Log.d("fromFeedAdapter", "adding image")
+                Glide.with(ctx).load(feed.imageArray).into(holder.image)
+            }
+        }catch (e: Exception){
+            Log.d("feedviewadapter", "Error while setting image in imageView : ${e.localizedMessage}")
         }
         if(feed.userId!=currentUserId){
             holder.feedEditBtn.isClickable = false

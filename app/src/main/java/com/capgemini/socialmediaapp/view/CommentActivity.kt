@@ -2,6 +2,7 @@ package com.capgemini.socialmediaapp.view
 
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -40,16 +41,21 @@ class CommentActivity : AppCompatActivity() {
         postId = intent.getLongExtra("postId",-1L)
 
         userViewModel.allUsers.observe(this){ users ->
+            Log.d("fromcommentactivity", "fetched users : ${users}")
             users?.let {
                 val map = mutableMapOf<Long, User>()
                 for( i in users){
                     map.put(i.userId, i)
                 }
-
+                commentViewModel.getComments(postId)
                 commentViewModel.allCommentsData.observe(this){ commentList ->
+                    Log.d("fromcommmentactivity", "fetched comments : ${commentList}")
                      commentList?.let {
+                         var sortedComments = commentList.sortedWith({ comment1, comment2 ->
+                             comment2.timestamp.compareTo(comment1.timestamp)
+                         })
                         commentRecyclerView.adapter=CommentAdapter(
-                            commentList,
+                            sortedComments,
                             map,
                             currentUserId,
                             this,
@@ -65,11 +71,16 @@ class CommentActivity : AppCompatActivity() {
         sendButton.setOnClickListener {
             val commentText = commentEditText.text.toString().trim()
             if (commentText.isNotEmpty()) {
+                Log.d("fromcommentactivity", "data being sended : ${postId}, ${currentUserId}")
                 commentViewModel.addComment(commentText, postId, currentUserId)
                 commentEditText.text.clear()
             }else{
                 showMessage(this, "Cannot add empty comment")
             }
+        }
+
+        commentViewModel.isAdded.observe(this){
+            commentViewModel.getComments(postId)
         }
     }
 }

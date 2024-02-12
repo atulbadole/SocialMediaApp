@@ -136,7 +136,7 @@ class PostDetailActivity : AppCompatActivity() {
                         postCommentButton.setOnClickListener {
                             var intent = Intent(this, CommentActivity::class.java)
                             intent.putExtra("postId", postId)
-                            intent.putExtra("currentUserData", currentUserId)
+                            intent.putExtra("currentUserId", currentUserId)
                             startActivity(intent)
                         }
                     }
